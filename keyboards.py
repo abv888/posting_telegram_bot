@@ -1,9 +1,15 @@
 from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
 
-lucky_jet_inline_keyboard = InlineKeyboardMarkup(
+ye_kazik_inline_keyboard = InlineKeyboardMarkup(
     [
         [
-            InlineKeyboardButton("LuckyJet 🚀", url="https://1wnurc.com/v3/lucky-jet-updated#xvag")
+            InlineKeyboardButton("MINES BOT 🤖", url="https://t.me/ye_kazik_mines_bot")
+        ],
+[
+            InlineKeyboardButton("BRAWL PIRATES BOT 🤖", url="https://t.me/ye_kazik_brawl_pirates_bot")
+        ],
+[
+            InlineKeyboardButton("COIN FLIP BOT 🤖", url="https://t.me/ye_kazik_coin_flip_bot")
         ]
     ]
 )

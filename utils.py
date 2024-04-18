@@ -1,9 +1,10 @@
 import re
+
 from typing import AsyncGenerator, List
 
 from pyrogram.types import Message
 
-from keyboards import lucky_jet_inline_keyboard
+from keyboards import ye_kazik_inline_keyboard
 
 
 async def reverse_order_in_history_messages(messages: AsyncGenerator):
@@ -11,7 +12,8 @@ async def reverse_order_in_history_messages(messages: AsyncGenerator):
     return reverse_message[::-1]
 
 
-async def clone(client, bot, from_channel, to_channel, admin_account='', promocode='', messages_limit=1, ):
+
+async def clone(client, bot, from_channel, to_channel, admin_account='', promocode='',reviews_channel='', mines_bot='', brawl_bot='', coin_bot='', live_channel='', messages_limit=1):
     messages: AsyncGenerator[Message, None] = client.get_chat_history(chat_id=from_channel, limit=messages_limit)
     reversed_messages: List[Message] = await reverse_order_in_history_messages(messages)
 
@@ -20,105 +22,137 @@ async def clone(client, bot, from_channel, to_channel, admin_account='', promoco
             # Text
             if message.text:
                 text = message.text
-                text = re.sub(r'(?i)(промокод:).*', r'\1 ' + promocode, text)
-                text = re.sub(r'(?i)@([^ ]+)', '@' + admin_account, text)
-                if message.reply_markup:
-                    await bot.send_message(chat_id=to_channel, text=text, reply_markup=lucky_jet_inline_keyboard)
+                text = re.sub(r'(?i)промокод\s*:\s*.*', 'промокод: ' + promocode, text, flags=re.IGNORECASE)
+                text = re.sub(r'(?i)промо\s*:\s*.*', 'промо: ' + promocode, text, flags=re.IGNORECASE)
+                text = re.sub(r'@nego\s*[^ ]*', '@' + admin_account, text, flags=re.IGNORECASE)
+                text = re.sub(r'отзывами\s*-\s*.*', 'отзывами - ' + reviews_channel, text, flags=re.IGNORECASE)
+                text = re.sub(r'@mines\s*[^ ]*', '@' + mines_bot, text, flags=re.IGNORECASE)
+                text = re.sub(r'@brawl\s*[^ ]*', '@' + brawl_bot, text, flags=re.IGNORECASE)
+                text = re.sub(r'@coin\s*[^ ]*', '@' + coin_bot, text, flags=re.IGNORECASE)
+                text = re.sub(r'https://t\.me/\+NXf405S5gPM2YzFi[^ ]*', live_channel, text, flags=re.IGNORECASE)
+                if message.reply_markup or ('https' in text) or ('@' in text):
+                    bot.send_message(chat_id=to_channel, text=text, reply_markup=ye_kazik_inline_keyboard)
                 else:
-                    await bot.send_message(chat_id=to_channel, text=text)
+                    bot.send_message(chat_id=to_channel, text=text)
             # Photo
             if message.photo:
+                ph = await client.download_media(message.photo.file_id)
                 if message.caption:
                     caption = message.caption
-                    caption = re.sub(r'(?i)(промокод:).*', r'\1 ' + promocode, caption)
-                    caption = re.sub(r'(?i)@([^ ]+)', '@' + admin_account, caption)
-                    if message.reply_markup:
-                        await bot.send_message(
-                            chat_id=to_channel,
-                            text=caption,
-                            reply_markup=lucky_jet_inline_keyboard
-                        )
+                    caption = re.sub(r'(?i)промокод\s*:\s*.*', 'промокод: ' + promocode, caption, flags=re.IGNORECASE)
+                    caption = re.sub(r'(?i)промо\s*:\s*.*', 'промо: ' + promocode, caption, flags=re.IGNORECASE)
+                    caption = re.sub(r'@nego\s*[^ ]*', '@' + admin_account, caption, flags=re.IGNORECASE)
+                    caption = re.sub(r'отзывами\s*-\s*.*', 'отзывами - ' + reviews_channel, caption,
+                                     flags=re.IGNORECASE)
+                    caption = re.sub(r'@mines\s*[^ ]*', '@' + mines_bot, caption, flags=re.IGNORECASE)
+                    caption = re.sub(r'@brawl\s*[^ ]*', '@' + brawl_bot, caption, flags=re.IGNORECASE)
+                    caption = re.sub(r'@coin\s*[^ ]*', '@' + coin_bot, caption, flags=re.IGNORECASE)
+                    caption = re.sub(r'https://t\.me/\+NXf405S5gPM2YzFi[^ ]*', live_channel, caption,
+                                     flags=re.IGNORECASE)
+                    if message.reply_markup or ('https' in caption) or ('@' in caption):
+                        bot.send_photo(chat_id=to_channel, photo=open(ph, 'rb'), caption=caption, reply_markup=ye_kazik_inline_keyboard)
                     else:
-                        await bot.send_message(
-                            chat_id=to_channel,
-                            text=caption
-                        )
+                        bot.send_photo(chat_id=to_channel, photo=open(ph, 'rb'), caption=caption)
                 else:
-                    photo = await message.download(in_memory=True)
-                    if message.reply_markup:
-                        await bot.send_photo(chat_id=to_channel, photo=photo, reply_markup=lucky_jet_inline_keyboard)
-                    else:
-                        await bot.send_photo(chat_id=to_channel, photo=photo)
+                    bot.send_photo(chat_id=to_channel, photo=open(ph, 'rb'))
             # Animation
             if message.animation:
-                animation = await message.download(in_memory=True)
+                animation = await client.download_media(message.animation.file_id)
                 if message.caption:
                     caption = message.caption
-                    caption = re.sub(r'(?i)(промокод:).*', r'\1 ' + promocode, caption)
-                    caption = re.sub(r'(?i)@([^ ]+)', '@' + admin_account, caption)
-                    if message.reply_markup:
-                        await bot.send_animation(chat_id=to_channel, animation=animation, caption=caption,
-                                                 reply_markup=lucky_jet_inline_keyboard)
+                    caption = re.sub(r'(?i)промокод\s*:\s*.*', 'промокод: ' + promocode, caption, flags=re.IGNORECASE)
+                    caption = re.sub(r'(?i)промо\s*:\s*.*', 'промо: ' + promocode, caption, flags=re.IGNORECASE)
+                    caption = re.sub(r'@nego\s*[^ ]*', '@' + admin_account, caption, flags=re.IGNORECASE)
+                    caption = re.sub(r'отзывами\s*-\s*.*', 'отзывами - ' + reviews_channel, caption, flags=re.IGNORECASE)
+                    caption = re.sub(r'@mines\s*[^ ]*', '@' + mines_bot, caption, flags=re.IGNORECASE)
+                    caption = re.sub(r'@brawl\s*[^ ]*', '@' + brawl_bot, caption, flags=re.IGNORECASE)
+                    caption = re.sub(r'@coin\s*[^ ]*', '@' + coin_bot, caption, flags=re.IGNORECASE)
+                    caption = re.sub(r'https://t\.me/\+NXf405S5gPM2YzFi[^ ]*', live_channel, caption,
+                                     flags=re.IGNORECASE)
+                    if message.reply_markup or ('https' in caption) or ('@' in caption):
+                        bot.send_animation(chat_id=to_channel, animation=open(animation, 'rb'), caption=caption,
+                                           reply_markup=ye_kazik_inline_keyboard)
                     else:
-                        await bot.send_animation(chat_id=to_channel, animation=animation, caption=caption)
+                        bot.send_animation(chat_id=to_channel, animation=open(animation, 'rb'), caption=caption)
                 else:
                     if message.reply_markup:
-                        await bot.send_animation(chat_id=to_channel, animation=animation,
-                                                 reply_markup=lucky_jet_inline_keyboard)
+                        bot.send_animation(chat_id=to_channel, animation=open(animation, 'rb'),
+                                           reply_markup=ye_kazik_inline_keyboard)
                     else:
-                        await bot.send_animation(chat_id=to_channel, animation=animation)
+                        bot.send_animation(chat_id=to_channel, animation=open(animation, 'rb'))
             # Circle
             if message.video_note:
-                video_note = await message.download(in_memory=True)
+                video_note = await client.download_media(message.video_note.file_id)
                 if message.caption:
                     caption = message.caption
-                    caption = re.sub(r'(?i)(промокод:).*', r'\1 ' + promocode, caption)
-                    caption = re.sub(r'(?i)@([^ ]+)', '@' + admin_account, caption)
-                    if message.reply_markup:
-                        await bot.send_video_note(chat_id=to_channel, video_note=video_note, caption=caption,
-                                                  reply_markup=lucky_jet_inline_keyboard)
+                    caption = re.sub(r'(?i)промокод\s*:\s*.*', 'промокод: ' + promocode, caption, flags=re.IGNORECASE)
+                    caption = re.sub(r'(?i)промо\s*:\s*.*', 'промо: ' + promocode, caption, flags=re.IGNORECASE)
+                    caption = re.sub(r'@nego\s*[^ ]*', '@' + admin_account, caption, flags=re.IGNORECASE)
+                    caption = re.sub(r'отзывами\s*-\s*.*', 'отзывами - ' + reviews_channel, caption, flags=re.IGNORECASE)
+                    caption = re.sub(r'@mines\s*[^ ]*', '@' + mines_bot, caption, flags=re.IGNORECASE)
+                    caption = re.sub(r'@brawl\s*[^ ]*', '@' + brawl_bot, caption, flags=re.IGNORECASE)
+                    caption = re.sub(r'@coin\s*[^ ]*', '@' + coin_bot, caption, flags=re.IGNORECASE)
+                    caption = re.sub(r'https://t\.me/\+NXf405S5gPM2YzFi[^ ]*', live_channel, caption, flags=re.IGNORECASE)
+                    if message.reply_markup or ('https' in caption) or ('@' in caption):
+                        bot.send_video_note(to_channel, open(video_note, 'rb'), caption=caption,
+                                            reply_markup=ye_kazik_inline_keyboard)
                     else:
-                        await bot.send_video_note(chat_id=to_channel, video_note=video_note, caption=caption)
+                        bot.send_video_note(to_channel, open(video_note, 'rb'), caption=caption)
                 else:
                     if message.reply_markup:
-                        await bot.send_video_note(chat_id=to_channel, video_note=video_note,
-                                                  reply_markup=lucky_jet_inline_keyboard)
+                        bot.send_video_note(to_channel, open(video_note, 'rb'),
+                                            reply_markup=ye_kazik_inline_keyboard)
                     else:
-                        await bot.send_video_note(chat_id=to_channel, video_note=video_note)
+                        bot.send_video_note(to_channel, open(video_note, 'rb'))
             # Video
             if message.video:
+                video = await client.download_media(message.video.file_id)
                 if message.caption:
                     caption = message.caption
-                    caption = re.sub(r'(?i)(промокод:).*', r'\1 ' + promocode, caption)
-                    caption = re.sub(r'(?i)@([^ ]+)', '@' + admin_account, caption)
-                    if message.reply_markup:
-                        await bot.send_message(
+                    caption = re.sub(r'(?i)промокод\s*:\s*.*', 'промокод: ' + promocode, caption, flags=re.IGNORECASE)
+                    caption = re.sub(r'(?i)промо\s*:\s*.*', 'промо: ' + promocode, caption, flags=re.IGNORECASE)
+                    caption = re.sub(r'@nego\s*[^ ]*', '@' + admin_account, caption, flags=re.IGNORECASE)
+                    caption = re.sub(r'отзывами\s*-\s*.*', 'отзывами - ' + reviews_channel, caption, flags=re.IGNORECASE)
+                    caption = re.sub(r'@mines\s*[^ ]*', '@' + mines_bot, caption, flags=re.IGNORECASE)
+                    caption = re.sub(r'@brawl\s*[^ ]*', '@' + brawl_bot, caption, flags=re.IGNORECASE)
+                    caption = re.sub(r'@coin\s*[^ ]*', '@' + coin_bot, caption, flags=re.IGNORECASE)
+                    caption = re.sub(r'https://t\.me/\+NXf405S5gPM2YzFi[^ ]*', live_channel, caption, flags=re.IGNORECASE)
+                    if message.reply_markup or ('https' in caption) or ('@' in caption):
+                        bot.send_video(
                             chat_id=to_channel,
-                            text=caption,
-                            reply_markup=lucky_jet_inline_keyboard
+                            video=open(video, 'rb'),
+                            caption=caption,
+                            reply_markup=ye_kazik_inline_keyboard
                         )
                     else:
-                        await bot.send_message(
+                        bot.send_video(
                             chat_id=to_channel,
-                            text=caption
+                            video=open(video, 'rb'),
+                            caption=caption
                         )
                 else:
-                    video = await message.download(in_memory=True)
                     if message.reply_markup:
-                        await bot.send_video(chat_id=to_channel, video=video, reply_markup=lucky_jet_inline_keyboard)
+                        bot.send_video(chat_id=to_channel, video=open(video, 'rb'), reply_markup=ye_kazik_inline_keyboard)
                     else:
-                        await bot.send_video(chat_id=to_channel, video=video)
+                        bot.send_video(chat_id=to_channel, video=open(video, 'rb'))
             # Audiio
             if message.audio:
-                audio = await message.download(in_memory=True)
-                await bot.send_audio(chat_id=to_channel, audio=audio)
+                audio = await client.download_media(message.audio.file_id)
+                bot.send_audio(chat_id=to_channel, audio=open(audio, 'rb'))
+            # Voice
+            if message.voice:
+                voice = await client.download_media(message.voice.file_id)
+                bot.send_voice(chat_id=to_channel, voice=open(voice, 'rb'))
             # Document
             if message.document:
-                document = await message.download(in_memory=True)
-                await bot.send_document(chat_id=to_channel, document=document)
+                document = await client.download_media(message.document.file_id)
+                bot.send_document(chat_id=to_channel, document=open(document, 'rb'))
             # Poll
             if message.poll:
-                poll = message.poll
-                await bot.send_poll(chat_id=to_channel, poll=poll)
+                question = message.poll.question
+                options = []
+                for option in message.poll.options:
+                    options.append(option.text)
+                bot.send_poll(chat_id=to_channel, question=question, options=options)
         else:
             pass

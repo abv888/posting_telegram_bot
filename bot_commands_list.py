@@ -6,19 +6,24 @@ admin_commands = [
         description='Запустить бота'
     ),
     BotCommand(
+        command='add_admin',
+        description='Добавть администратора'
+    ),
+    BotCommand(
+        command='delete_admin',
+        description='Удалить администратора'
+    ),
+    BotCommand(
+        command='post',
+        description='Запостить 1 пост в основной канал'
+    ),
+    BotCommand(
+        command='test',
+        description='Запостить 1 пост в тестовый канал'
+    )
+,
+    BotCommand(
         command='help',
-        description='Помощь'
-    ),
-    BotCommand(
-        command='adduser',
-        description='Добавить нового члена совета директоров'
-    ),
-    BotCommand(
-        command='new',
-        description='Добавить документ на согласование'
-    ),
-    BotCommand(
-        command='status',
-        description='Статус по текущему согласованию'
+        description='Вывести памятку по использованию бота'
     )
 ]
